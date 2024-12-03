@@ -164,7 +164,7 @@ MEDIA_URL = f'https://{AZURE_SA_NAME}.blob.core.windows.net/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
-CRIPSY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'itreporting:home'
 

@@ -11,7 +11,7 @@ class Issue(models.Model):
     details = models.TextField()
     date_submitted = models.DateTimeField(default=timezone.now)
     description = models.TextField()
-    author = models.ForeignKey(User, related_name = 'issues',
+    author = models.ForeignKey(User, related_name = 'issue',
     on_delete=models.CASCADE)
     def __str__(self):
 
