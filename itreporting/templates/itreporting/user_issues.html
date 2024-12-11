@@ -4,12 +4,12 @@
     <title>Issues Reported</title>
 </head>
 <body>
-    <h1>Issues Reported</h1>
+    <h1 class="mb-3"> Issues Reported by {{ view.kwargs.username }} {% if is_paginated %} (page {{page_obj.number}} of {{page_obj.paginator.num_pages}}){% endif %}</h1>
     {% for issue in issues %}
         <article class="media content-section">
             <div class="media-body">
                 <div class="article-metadata">
-                    <a class="mr-2" href="{% url 'itreporting:user-issues' issue.author.username %}">{{ issue.author.profile }}</a>
+                    <a class="mr-2" href="#">{{ issue.author.profile }}</a>
                     <small class="text-muted">{{ issue.date_submitted }}</small>
                 </div>
                 <h2><a class="article-title" href="{% url 'itreporting:issue-detail' issue.id %}">{{ issue }}</a></h2>
