@@ -1,24 +1,29 @@
+from django.core.mail import send_mail
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Issue
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import DeleteView
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 import requests
+from .forms import ContactForm
+
 
 def home(request):
     url = 'https://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid={}'
     cities = [('Sheffield', 'UK'), ('Melaka', 'Malaysia'), ('Bandung', 'Indonesia')]
     weather_data = []
-    api_key = '<997409d38e16ba2ba15339c311fbf62a>'
+    api_key = '997409d38e16ba2ba15339c311fbf62a'
 
     for city in cities:
         # Request the API data and convert the JSON to Python data types
+        
         city_weather = requests.get(url.format(city[0], city[1], api_key)).json()
 
+        print(city_weather)
         weather = {
             'city': city_weather['name'] + ', ' + city_weather['sys']['country'],
             'temperature': city_weather['main']['temp'],
@@ -31,9 +36,32 @@ def home(request):
 
 def about(request):
     return render(request, 'itreporting/about.html', {'title': 'Welcome to the About Page'})
+
+
 def contact(request):
-    return render(request, 'itreporting/contact.html', {'title': 'Welcome to the Contact Page'})
-from .models import Issue
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            content = form.cleaned_data['content']
+            
+            html = render_to_string('itreporting/emails/contactform.html', {
+                'name': name,
+                'email': email,
+                'content': content
+            })
+            
+            send_mail('The contact form subject', 'This is the message', 'declan@gmail.com', ['declanchambers83@gmail.com'], html_message=html)
+            
+            return redirect('contact')
+ 
+    else:
+        form = ContactForm
+        
+    return render(request, 'itreporting/contact.html',{'form': form })
+
 def report(request):
     daily_report = {'issues': Issue.objects.all(), 'title': 'Issues Reported'}
     return render(request, 'itreporting/report.html', daily_report)
@@ -87,3 +115,5 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         issue = self.get_object()
         return self.request.user == issue.author
     
+    
+

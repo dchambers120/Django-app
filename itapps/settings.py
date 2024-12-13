@@ -34,6 +34,12 @@ else:
     ALLOWED_HOSTS = [WEBSITE_HOSTNAME]
     CSRF_TRUSTED_ORIGINS = [f'https://{WEBSITE_HOSTNAME}']
 
+# Looking to send emails in production? Check out our Email API/SMTP product!
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '6b84f11fe722a3'
+EMAIL_HOST_PASSWORD = 'cc4109deaafc87'
+EMAIL_PORT = '2525'
+
 # Application definition
 
 INSTALLED_APPS = [
