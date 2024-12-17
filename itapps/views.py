@@ -78,30 +78,17 @@ def module_list(request):
     }
     
     
-    
-    
     return render(request, 'itreporting/module_list.html', context)
 
 @login_required
 def register_module(request, module_id):
     module = Module.objects.get(id=module_id)
+    print(module)
     
     if module.availability:  
         Registration.objects.create(student=request.user, module=module)
-    
-    # Fetch the updated modules and registered modules to render the page again
-    modules = Module.objects.filter(availability=True)  
-    registered_modules = Registration.objects.filter(student=request.user)
-
-    context = {
-        'modules': modules,
-        'registered_modules': [reg.module for reg in registered_modules]
-    }
-
-    # Render the module_list template with the context
-    return render(request, 'itreporting/module_list.html', context)
-
-
+        
+    return render(request, 'module_list')
 
 @login_required
 def unregister_module(request, module_id):
@@ -109,10 +96,7 @@ def unregister_module(request, module_id):
     
     Registration.objects.filter(student=request.user, module=module).delete()
     
-    module.is_active = False  # Example action
-    module.save()
-    
-    return redirect('itreporting:module_list')
+    return redirect('module_list')
 
 
 class PostListView(ListView):
