@@ -40,25 +40,25 @@ crossorigin="anonymous">
                         <a class="nav-item nav-link" href="{% url 'itreporting:about'%}">About</a>
                         <a class="nav-item nav-link" href="{% url 'itreporting:contact'%}">Contact</a>
                         <a class="nav-item nav-link" href="{% url 'itreporting:report'%}">Report</a>
+                        <a class="nav-item nav-link" href="{% url 'itreporting:module_list' %}">Module List</a>
+
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profiles</a>
                     </div>
                     <!-- Navbar Right Side -->
-                    <div class="navbar-nav"> 
-
-                        {% if user.is_authenticated  %} 
-                            <a class="nav-item nav-link" href="{% url 'itreporting:issue-create' %}">Report New Issue</a>
-                    
-                            <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a> 
-                    
-                        {% else %} 
-                    
-                            <a class="nav-item nav-link" href="{% url 'login' %}">Login</a> 
-                    
-                            <a class="nav-item nav-link" href="{% url 'register' %}">Register</a> 
-                    
-                        {% endif %} 
-                    
-                     </div>
+                    <div class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <form method="post" id="frm_logout" action="{% url 'logout' %}"
+                    style="display:inline;">
+                        {% csrf_token %}
+                            <button type="submit" class="nav-item nav-link"
+                    style="background:none; border:none; cursor:pointer;">Logout</button>
+                                </form>
+                    {% else %}
+                    <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                    <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                    </div>
+                                        
                 </div>
                 </div>
             </nav>

@@ -1,12 +1,36 @@
 {% extends "itreporting/base.html"%}
 
 {% block content %}
-<h1>Sheffield Hallam University. Here to help you 
-    begin your next journey in life.
-</h1>
-<h2>
-    Here to make you dreams come true.
-</h2>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services</title>
+</head>
+<body>
+    <!-- Section 1: Best Modules and Teachers -->
+    <section>
+        <h2>Our Modules and Teachers</h2>
+        <p>Here we provide you with some of the best modules and teachers available around the UK today.</p>
+    </section>
+
+    <!-- Section 2: Support and Experience -->
+    <section>
+        <h2>Support and Experience</h2>
+        <p>We provide you with the best support and enjoyable experience ever for you to succeed today.</p>
+    </section>
+
+    <section>
+        <a class="nav-item nav-link" href="{% url 'itreporting:about'%}">About</a>
+        <a class="nav-item nav-link" href="{% url 'itreporting:contact'%}">Contact</a>
+        <a class="nav-item nav-link" href="{% url 'profile' %}">Profiles</a>
+    </section>
+
+    <section>
+        <h2>Courses</h2>
+        <!--List of course when Done.-->
+    </section>
+</body>
+
 {% endblock %}
 
 {% block sidebar %} 
@@ -32,3 +56,4 @@
 </div> 
 
 {% endblock sidebar %} 
+

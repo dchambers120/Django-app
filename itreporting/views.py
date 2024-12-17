@@ -10,7 +10,8 @@ from django.views.generic.edit import DeleteView
 from django.contrib.auth.models import User
 import requests
 from .forms import ContactForm
-
+from django.contrib.auth.decorators import login_required
+from .models import Module, Course, Registration
 
 def home(request):
     url = 'https://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid={}'
@@ -65,6 +66,35 @@ def contact(request):
 def report(request):
     daily_report = {'issues': Issue.objects.all(), 'title': 'Issues Reported'}
     return render(request, 'itreporting/report.html', daily_report)
+
+@login_required
+def module_list(request):
+    modules = Module.objects.filter(availability=True)  
+    registered_modules = Registration.objects.filter(student=request.user)
+
+    context = {
+        'modules': modules,
+        'registered_modules': [reg.module for reg in registered_modules]
+    }
+    return render(request, 'itreporting/module_list.html', context)
+
+@login_required
+def register_module(request, module_id):
+    module = Module.objects.get(id=module_id)
+    
+    if module.availability:  
+        Registration.objects.create(student=request.user, module=module)
+        
+    return render(request, 'module_list')
+
+@login_required
+def unregister_module(request, module_id):
+    module = Module.objects.get(id=module_id)
+    
+    Registration.objects.filter(student=request.user, module=module).delete()
+    
+    return redirect('module_list')
+
 
 class PostListView(ListView):
     model = Issue

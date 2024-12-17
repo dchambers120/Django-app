@@ -4,6 +4,39 @@
 
 {% block content %}
 <h1>Welcome to the Contact Page</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services</title>
+</head>
+<body>
+    <!-- Section 1: Best Modules and Teachers -->
+    <section>
+        <h2>Our Contact Page</h2>
+        <p>Please provide us with your feddback today. It will really help
+           today to keep on improving
+        </p>
+    </section>
+
+    <!-- Section 2: Support and Experience -->
+    <section>
+        <h3>Contact Area</h3>
+        <p>Please provide your details below</p>
+    </section>
+
+    <section>
+        <a class="nav-item nav-link" href="{% url 'itreporting:about'%}">About</a>
+        <a class="nav-item nav-link" href="{% url 'itreporting:home'%}">Contact</a>
+        <a class="nav-item nav-link" href="{% url 'profile' %}">Profiles</a>
+    </section>
+
+    <section>
+        <h2>Courses</h2>
+        <!--List of course when Done.-->
+    </section>
+</body>
+
+
     <form method="post" action",">
         {% csrf_token %}
 

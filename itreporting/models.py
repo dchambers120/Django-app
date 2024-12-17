@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+
 # Create your models here.
 
 class Issue(models.Model):
@@ -21,4 +22,28 @@ def get_absolute_url(self):
   
     return reverse('itreporting:issue-detail', kwargs =
 {'pk': self.pk})
+    
+class Course(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    
+class Module(models.Model):
+    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=10, unique=True)
+    credit = models.IntegerField()
+    category = models.CharField(max_length=50)
+    description = models.TextField()
+    availability = models.BooleanField(default=True)  
+    courses_allowed = models.ManyToManyField(Course)  
+
+    def __str__(self):
+        return f"{self.name} ({self.code})"
+    
+class Registration(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    date_registered = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.student.username} registered for {self.module.name}"
     

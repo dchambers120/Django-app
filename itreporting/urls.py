@@ -13,7 +13,10 @@ urlpatterns = [
     path('issue/new', PostCreateView.as_view(), name = 'issue-create'),
     path('issues/<int:pk>/update/', PostUpdateView.as_view(), name = 'issue-update'),
     path('issue/<int:pk>/delete/', PostDeleteView.as_view(), name = 'issue-delete'),
-    path('issue/<str:username>', UserPostListView.as_view(), name = 'user-issues')
+    path('issue/<str:username>', UserPostListView.as_view(), name = 'user-issues'),
+    path('modules/', views.module_list, name='module_list'),
+    path('register_module/<int:module_id>/', views.register_module, name='register_module'),
+    path('unregister_module/<int:module_id>/', views.unregister_module, name='unregister_module')
     ]
 
 
