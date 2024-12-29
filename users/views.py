@@ -19,22 +19,43 @@ def register(request):
     return render(request, 'users/register.html', {'form': form, 'title': 'Student Registration'})
 @login_required
 
+#def profile(request):
+ #   if request.method == 'POST':
+  #      u_form = UserUpdateForm(request.POST, instance=request.user)
+   #     p_form= ProfileUpdateForm(request.POST, request.FILES,
+    #instance=request.user.profile)
+            
+     #   if u_form.is_valid() and p_form.is_valid():
+      #      u_form.save()
+       #     p_form.save()
+        #    messages.success(request, 'Your account has been successfully updated!')
+        #return redirect('profile')
+    #else:
+     #   u_form = UserUpdateForm(instance = request.user)
+      #  p_form = ProfileUpdateForm(instance = request.user.profile)
+       # context = {'u_form': u_form, 'p_form': p_form, 'title': 'Student Profile'}
+        #return render(request, 'users/profile.html', context)
+       
+       
+@login_required
 def profile(request):
     if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form= ProfileUpdateForm(request.POST, request.FILES,
-    instance=request.user.profile)
-            
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
-            messages.success(request, 'Your account has been successfully updated!')
-        return redirect('profile')
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('profile.html')  # Replace 'profile' with your profile page URL name.
     else:
-        u_form = UserUpdateForm(instance = request.user)
-        p_form = ProfileUpdateForm(instance = request.user.profile)
-        context = {'u_form': u_form, 'p_form': p_form, 'title': 'Student Profile'}
-        return render(request, 'users/profile.html', context)
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    return render(request, 'users/profile.html', context)
+
 
 def home(request):
 

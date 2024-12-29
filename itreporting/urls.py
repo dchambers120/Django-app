@@ -18,5 +18,3 @@ urlpatterns = [
     path('register_module/<int:module_id>/', views.register_module, name='register_module'),
     path('unregister_module/<int:module_id>/', views.unregister_module, name='unregister_module')
     ]
-
-
