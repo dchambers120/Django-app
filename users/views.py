@@ -1,23 +1,53 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, ProfileRegisterForm
+from .models import Profile
 import requests
+
 # Create your views here.
+#def register(request):
+ #   if request.method == 'POST':
+  #      form = UserRegisterForm(request.POST)
+   #     if form.is_valid():
+    #        form.save()
+     #       username = form.cleaned_data.get('username')
+      #      messages.success(request, f'Your account has been created! Now you can login!')
+       #     return redirect('login')
+        #else:
+         #   messages.warning(request, 'Unable to create account.')
+    #else:
+     #   form = UserRegisterForm()
+    #return render(request, 'users/register.html', {'form': form, 'title': 'Student Registration'})
+#@login_required
+
 def register(request):
     if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
+        user_form = UserRegisterForm(request.POST)
+        profile_form = ProfileRegisterForm(request.POST, request.FILES)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            # Save user form
+            user = user_form.save()
+            # Save profile form
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            
+            username = user_form.cleaned_data.get('username')
             messages.success(request, f'Your account has been created! Now you can login!')
             return redirect('login')
         else:
-            messages.warning(request, 'Unable to create account.')
+            messages.warning(request, 'Unable to create account. Please check the form fields.')
     else:
-        form = UserRegisterForm()
-    return render(request, 'users/register.html', {'form': form, 'title': 'Student Registration'})
-@login_required
+        user_form = UserRegisterForm()
+        profile_form = ProfileRegisterForm()
+
+    return render(request, 'users/register.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'title': 'Student Registration'
+    })
 
 #def profile(request):
  #   if request.method == 'POST':

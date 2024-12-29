@@ -1,3 +1,9 @@
 from django.contrib import admin
 from .models import Profile
-admin.site.register(Profile)
+
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'date_of_birth', 'address', 'city', 'country', 'image']
+    search_fields = ['user__username', 'user__first_name', 'user__last_name']
+    list_filter = ['country']
+
+admin.site.register(Profile, ProfileAdmin)
