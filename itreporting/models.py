@@ -43,6 +43,11 @@ class Registration(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     date_registered = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['student', 'module'], name='unique_registration')
+        ]
 
     def __str__(self):
         return f"{self.student.username} registered for {self.module.name}"
