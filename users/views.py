@@ -29,10 +29,15 @@ def register(request):
         if user_form.is_valid() and profile_form.is_valid():
             # Save user form
             user = user_form.save()
+            
+            # Check if the profile already exists for this user
+            profile, created = Profile.objects.get_or_create(user=user)
+
             # Save profile form
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
+            if created:
+                profile = profile_form.save(commit=False)
+                profile.user = user
+                profile.save()
             
             username = user_form.cleaned_data.get('username')
             messages.success(request, f'Your account has been created! Now you can login!')
@@ -75,7 +80,7 @@ def profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            return redirect('profile.html')  # Replace 'profile' with your profile page URL name.
+            return redirect('profile')  # Replace 'profile' with your profile page URL name.
     else:
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
