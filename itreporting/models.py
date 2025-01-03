@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
 # Create your models here.
@@ -48,6 +50,11 @@ class Registration(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['student', 'module'], name='unique_registration')
         ]
+        
+    def clean(self):
+        # Ensure that a student is only registered for one module
+        if Registration.objects.filter(student=self.student).exists():
+            raise ValidationError(_('A student can only register for one module.'))
 
     def __str__(self):
         return f"{self.student.username} registered for {self.module.name}"

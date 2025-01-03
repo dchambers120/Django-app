@@ -5,8 +5,9 @@ from django.core.exceptions import ValidationError
 from .models import Profile
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField(label='Email address', help_text='Your SHU email address')
-    class Meta: 
+    email = forms.EmailField()
+
+    class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
         
@@ -38,3 +39,4 @@ class ProfileAdminForm(forms.ModelForm):
         if user.groups.count() > 1:
             raise ValidationError("A user can only be assigned to one group.")
         return user
+    

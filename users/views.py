@@ -2,48 +2,37 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, ProfileRegisterForm
+from django.db import transaction
 from .models import Profile
 import requests
-
-# Create your views here.
-#def register(request):
- #   if request.method == 'POST':
-  #      form = UserRegisterForm(request.POST)
-   #     if form.is_valid():
-    #        form.save()
-     #       username = form.cleaned_data.get('username')
-      #      messages.success(request, f'Your account has been created! Now you can login!')
-       #     return redirect('login')
-        #else:
-         #   messages.warning(request, 'Unable to create account.')
-    #else:
-     #   form = UserRegisterForm()
-    #return render(request, 'users/register.html', {'form': form, 'title': 'Student Registration'})
-#@login_required
 
 def register(request):
     if request.method == 'POST':
         user_form = UserRegisterForm(request.POST)
         profile_form = ProfileRegisterForm(request.POST, request.FILES)
-        
-        if user_form.is_valid() and profile_form.is_valid():
-            # Save user form
-            user = user_form.save()
-            
-            # Check if the profile already exists for this user
-            profile, created = Profile.objects.get_or_create(user=user)
 
-            # Save profile form
-            if created:
-                profile = profile_form.save(commit=False)
-                profile.user = user
-                profile.save()
-            
-            username = user_form.cleaned_data.get('username')
-            messages.success(request, f'Your account has been created! Now you can login!')
-            return redirect('login')
+        if user_form.is_valid() and profile_form.is_valid():
+            try:
+                with transaction.atomic():
+                    # Save the user
+                    user = user_form.save()
+
+                    # Safeguard against duplicates by using update_or_create
+                    profile, created = Profile.objects.update_or_create(
+                        user=user,
+                        defaults={
+                            'bio': profile_form.cleaned_data.get('bio', ''),
+                            # Add other fields as necessary
+                        }
+                    )
+
+                messages.success(request, 'Your account has been created! You can now log in.')
+                return redirect('login')
+            except Exception as e:
+                print(f"Error occurred: {e}")
+                messages.error(request, 'An error occurred while creating your account. Please try again.')
         else:
-            messages.warning(request, 'Unable to create account. Please check the form fields.')
+            messages.error(request, 'Please correct the errors in the form.')
     else:
         user_form = UserRegisterForm()
         profile_form = ProfileRegisterForm()
@@ -51,27 +40,9 @@ def register(request):
     return render(request, 'users/register.html', {
         'user_form': user_form,
         'profile_form': profile_form,
-        'title': 'Student Registration'
+        'title': 'Student Registration',
     })
-
-#def profile(request):
- #   if request.method == 'POST':
-  #      u_form = UserUpdateForm(request.POST, instance=request.user)
-   #     p_form= ProfileUpdateForm(request.POST, request.FILES,
-    #instance=request.user.profile)
-            
-     #   if u_form.is_valid() and p_form.is_valid():
-      #      u_form.save()
-       #     p_form.save()
-        #    messages.success(request, 'Your account has been successfully updated!')
-        #return redirect('profile')
-    #else:
-     #   u_form = UserUpdateForm(instance = request.user)
-      #  p_form = ProfileUpdateForm(instance = request.user.profile)
-       # context = {'u_form': u_form, 'p_form': p_form, 'title': 'Student Profile'}
-        #return render(request, 'users/profile.html', context)
-       
-       
+    
 @login_required
 def profile(request):
     if request.method == 'POST':
