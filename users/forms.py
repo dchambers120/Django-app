@@ -20,12 +20,12 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = fields = ['image', 'date_of_birth', 'address', 'city', 'country']
+        fields = fields = ['photo', 'date_of_birth', 'address', 'city', 'country']
         
 class ProfileRegisterForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['date_of_birth', 'address', 'city', 'country', 'image']
+        fields = ['date_of_birth', 'address', 'city', 'country', 'photo']
         
 class ProfileAdminForm(forms.ModelForm):
     class Meta:

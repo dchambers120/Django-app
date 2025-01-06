@@ -8,7 +8,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=100, blank=True)
     country = models.CharField(max_length=100, blank=True)
-    image = models.ImageField(default='profile_pics/default.png', upload_to='profile_pics')
-
+    photo = models.ImageField(upload_to='profile_pics/', default='profile_pics/default.jpg')
+    
     def __str__(self):
         return f'{self.user.username}'
