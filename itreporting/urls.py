@@ -16,5 +16,7 @@ urlpatterns = [
     path('issue/<str:username>', UserPostListView.as_view(), name = 'user-issues'),
     path('module_list/', views.module_list, name='module_list'),
     path('register_module/<int:module_id>/', views.register_module, name='register_module'),
-    path('unregister_module/<int:module_id>/', views.unregister_module, name='unregister_module')
+    path('unregister_module/<int:module_id>/', views.unregister_module, name='unregister_module'),
+    path('courses/', views.course_list, name='course_list'),
+    path('courses/<int:pk>/', views.course_detail, name='course_detail')
     ]

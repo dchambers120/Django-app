@@ -1,0 +1,26 @@
+{% extends "itreporting/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course List</title>
+</head>
+<body>
+    <h1>Available Courses</h1>
+    
+    <ul>
+        {% for course in courses %}
+            <li>
+                <strong>{{ course.name }}</strong>: {{ course.description }}
+                <a href="{% url 'itreporting:course_detail' course.id %}">View Details</a>
+            </li>
+        {% empty %}
+            <li>No courses available at the moment.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+{% endblock %}

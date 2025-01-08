@@ -1,59 +1,61 @@
-{% extends "itreporting/base.html"%}
+{% extends "itreporting/base.html" %}
 
 {% block content %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Services</title>
+    <title>Home</title>
 </head>
 <body>
-    <!-- Section 1: Best Modules and Teachers -->
+    <!-- Section 1: Greeting -->
     <section>
-        <h2>Our Modules and Teachers</h2>
-        <p>Here we provide you with some of the best modules and teachers available around the UK today.</p>
+        <h2>Sheffield Hallam University</h2>
+        <p>WELCOME TO SHEFFIELD HALLAM UNIVERSITY!!!</p>
     </section>
 
-    <!-- Section 2: Support and Experience -->
+    <!-- Section 2: Experience -->
     <section>
-        <h2>Support and Experience</h2>
-        <p>We provide you with the best support and enjoyable experience ever for you to succeed today.</p>
+        <h2>Experience</h2>
+        <p>
+            Here at Sheffield Hallam University it is all about the experience. We provide you with exciting courses
+            and modules with some of our most fantastic members of staff to help you develop today. 
+        </p>
     </section>
 
+    <!-- Section 3: Courses -->
     <section>
-        <a class="nav-item nav-link" href="{% url 'itreporting:about'%}">About</a>
-        <a class="nav-item nav-link" href="{% url 'itreporting:contact'%}">Contact</a>
+        <h2>Available Courses</h2>
+        <ul>
+            {% for course in courses %}
+                <li>
+                    <strong>{{ course.name }}</strong>: {{ course.description }}
+                    <a href="{% url 'itreporting:course_detail' course.id %}">View Details</a>
+                </li>
+            {% empty %}
+                <li>No courses available at the moment.</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Section 4: Links -->
+    <section>
+        <a class="nav-item nav-link" href="{% url 'itreporting:about' %}">About</a>
+        <a class="nav-item nav-link" href="{% url 'itreporting:contact' %}">Contact</a>
         <a class="nav-item nav-link" href="{% url 'profile' %}">Profiles</a>
     </section>
-
-    <section>
-        <h2>Courses</h2>
-        <!--List of course when Done.-->
-    </section>
 </body>
-
 {% endblock %}
 
-{% block sidebar %} 
-
+{% block sidebar %}
 <div class="col-md-4"> 
-
-        <h3>Current Weathers</h3> 
-
-        <p class='text-muted'>Cities across United Kingdom 
-
-            <ul class="list-group"> 
-
-                    {% for weather in weather_data %} 
-
-                        <li class="list-group-item list-group-item-light">{{ weather.city }}: {{ weather.description }}, {{ weather.temperature }}&deg;C</li> 
-
-                    {% endfor %} 
-
-            </ul> 
-
-        </p> 
-
-</div> 
-
+    <h3>Current Weathers</h3> 
+    <p class='text-muted'>Cities across United Kingdom 
+        <ul class="list-group"> 
+            {% for weather in weather_data %} 
+                <li class="list-group-item list-group-item-light">{{ weather.city }}: {{ weather.description }}, {{ weather.temperature }}&deg;C</li> 
+            {% endfor %} 
+        </ul> 
+    </p> 
+</div>
 {% endblock sidebar %} 
 

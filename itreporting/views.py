@@ -31,13 +31,13 @@ def home(request):
             'description': city_weather['weather'][0]['description']
         }
         weather_data.append(weather)  # Add the data for the current city into our list
-
-    return render(request, 'itreporting/home.html', {'title': 'Homepage', 'weather_data': weather_data})
-
+        
+    courses = Course.objects.all()
+    
+    return render(request, 'itreporting/home.html', {'title': 'Homepage', 'weather_data': weather_data, 'courses': courses,})
 
 def about(request):
     return render(request, 'itreporting/about.html', {'title': 'Welcome to the About Page'})
-
 
 def contact(request):
     if request.method == 'POST':
@@ -100,6 +100,14 @@ def unregister_module(request, module_id):
     Registration.objects.filter(student=request.user, module=module).delete()
 
     return redirect('itreporting:module_list')
+
+def course_list(request):
+    courses = Course.objects.all()
+    return render(request, 'itreporting/course_list.html', {'courses': courses})
+
+def course_detail(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    return render(request, 'itreporting/course_detail.html', {'object': course})
 
 class PostListView(ListView):
     model = Issue

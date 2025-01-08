@@ -1,4 +1,4 @@
-{% extends "itreporting/base.html"%}
+{% extends "itreporting/base.html" %}
 
 {% load crispy_forms_tags %}
 
@@ -9,6 +9,8 @@
     <title>Module List</title>
 </head>
 <body>
+
+    <!-- Main Content -->
     <h1>Modules Available for Registration</h1>
     
     <h2>Available Modules:</h2>
@@ -25,7 +27,13 @@
             </li>
         {% endfor %}
     </ul>
+
+    <section>
+        <a class="nav-item nav-link" href="{% url 'itreporting:home' %}">Home</a>
+        <a class="nav-item nav-link" href="{% url 'itreporting:about' %}">About</a>
+        <a class="nav-item nav-link" href="{% url 'itreporting:contact' %}">Contact</a>
+        <a class="nav-item nav-link" href="{% url 'profile' %}">Profiles</a>
+    </section>
 </body>
 </html>
 {% endblock content %}
-

@@ -1,34 +1,78 @@
-{% extends "itreporting/base.html"%}
+{% extends "itreporting/base.html" %}
 
 {% block content %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Services</title>
+    <title>About Us - Sheffield Hallam University</title>
 </head>
 <body>
-    <!-- Section 1: Best Modules and Teachers -->
-    <section>
+    <!-- Internal Navigation -->
+    <nav>
+        <h2>Explore Our University</h2>
+        <ul>
+            <li><a href="#about-us">About Us</a></li>
+            <li><a href="#modules-teachers">Our Modules and Teachers</a></li>
+            <li><a href="#support-experience">Support and Experience</a></li>
+            <li><a href="#future-goals">Our Vision for the Future</a></li>
+        </ul>
+    </nav>
+
+    <!-- Section 1: About Us -->
+    <section id="about-us">
+        <h2>About Sheffield Hallam University</h2>
+        <p>
+            Welcome to Sheffield Hallam University, where we are committed to academic excellence and an exceptional student experience. 
+            Located in the heart of Sheffield, we have been a leader in education, innovation, and research for decades. 
+            Our mission is to empower students from diverse backgrounds to achieve their ambitions and make a meaningful impact in the world.
+        </p>
+    </section>
+
+    <!-- Section 2: Best Modules and Teachers -->
+    <section id="modules-teachers">
         <h2>Our Modules and Teachers</h2>
-        <p>Here we provide you with some of the best modules and teachers available around the UK today.</p>
+        <p>
+            At Sheffield Hallam University, we pride ourselves on offering a wide variety of modules tailored to meet the needs of the modern workforce. 
+            Our highly qualified and experienced faculty are here to provide you with the knowledge, skills, and guidance to succeed in your chosen field.
+        </p>
+        <p>
+            Whether you're interested in cutting-edge technology, innovative business practices, or the arts, we have something for everyone. 
+            Our teachers are passionate about fostering creativity and critical thinking in every student.
+        </p>
     </section>
 
-    <!-- Section 2: Support and Experience -->
-    <section>
+    <!-- Section 3: Support and Experience -->
+    <section id="support-experience">
         <h2>Support and Experience</h2>
-        <p>We provide you with the best support and enjoyable experience ever for you to succeed today.</p>
+        <p>
+            We understand that every student’s journey is unique, and that’s why we offer personalized support to help you succeed. 
+            From academic advising and career counseling to mental health resources and financial aid, our dedicated teams are here to help you every step of the way.
+        </p>
+        <p>
+            Life at Sheffield Hallam University is more than just academics. With state-of-the-art facilities, vibrant student societies, and cultural events, 
+            you’ll have countless opportunities to make memories and build lifelong connections.
+        </p>
     </section>
 
+    <!-- Section 4: Our Vision for the Future -->
+    <section id="future-goals">
+        <h2>Our Vision for the Future</h2>
+        <p>
+            At Sheffield Hallam University, we are committed to shaping a better future for our students and society. 
+            Through cutting-edge research, innovative teaching, and strong partnerships with industry leaders, 
+            we aim to drive progress and create sustainable solutions to global challenges.
+        </p>
+        <p>
+            Join us as we continue to build on our legacy of excellence and empower the next generation of thinkers, innovators, and leaders.
+        </p>
+    </section>
+
+    <!-- Footer Links -->
     <section>
-        <a class="nav-item nav-link" href="{% url 'itreporting:home'%}">About</a>
-        <a class="nav-item nav-link" href="{% url 'itreporting:contact'%}">Contact</a>
+        <h3>Quick Links</h3>
+        <a class="nav-item nav-link" href="{% url 'itreporting:home' %}">Home</a>
+        <a class="nav-item nav-link" href="{% url 'itreporting:contact' %}">Contact</a>
         <a class="nav-item nav-link" href="{% url 'profile' %}">Profiles</a>
     </section>
-
-    <section>
-        <h2>Courses</h2>
-        <!--List of course when Done.-->
-    </section>
 </body>
-
-{% endblock %}s
+{% endblock %}

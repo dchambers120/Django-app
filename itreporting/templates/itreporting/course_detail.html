@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>Course Details</title>
+</head>
+<body>
+    <h1>Course Details</h1>
+
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="{% url 'itreporting:course_list' %}">Back to Course List</a>
+                <small class="text-muted">Submitted on: {{ object.date_submitted }}</small>
+            </div>
+            <h2 class="article-title">{{ object.name }}</h2>
+            <p class="article-content">{{ object.description }}</p>
+        </div>
+    </article>
+</body>
+</html>
