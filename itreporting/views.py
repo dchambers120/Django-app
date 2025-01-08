@@ -77,26 +77,7 @@ def module_list(request):
         'registered_modules': [reg.module for reg in registered_modules]
     }
     
-    
-    
-    
     return render(request, 'itreporting/module_list.html', context)
-
-#@login_required
-#def register_module(request, module_id):
-#    module = Module.objects.get(id=module_id)
-    
-#    if module.availability:  
-#        Registration.objects.create(student=request.user, module=module)
-    
-#    modules = Module.objects.filter(availability=True)  
- #   registered_modules = Registration.objects.filter(student=request.user)
-
-  #  context = {
-   #     'modules': modules,
-    #    'registered_modules': [reg.module for reg in registered_modules]
-    #}
-    #return render(request, 'itreporting/module_list.html', context)
 
 @login_required
 def register_module(request, module_id):
@@ -110,17 +91,6 @@ def register_module(request, module_id):
         Registration.objects.create(student=request.user, module=module)
 
     return redirect('itreporting:module_list')
-
-#@login_required
-#def unregister_module(request, module_id):
- #   module = Module.objects.get(id=module_id)
-    
-  #  Registration.objects.filter(student=request.user, module=module).delete()
-    
-   # module.is_active = False  # Example action
-    #module.save()
-    
-    #return redirect('itreporting:module_list')
     
 @login_required
 def unregister_module(request, module_id):
@@ -130,8 +100,6 @@ def unregister_module(request, module_id):
     Registration.objects.filter(student=request.user, module=module).delete()
 
     return redirect('itreporting:module_list')
-
-
 
 class PostListView(ListView):
     model = Issue

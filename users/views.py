@@ -48,10 +48,12 @@ def profile(request):
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+
         if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            return redirect('profile')  # Replace 'profile' with your profile page URL name.
+            user_form.save()  # Save the user info
+            profile_form.save()  # Save the profile updates
+            messages.success(request, 'Your profile has been updated!')
+            return redirect('profile')  # Redirect to the profile page after successful update
     else:
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
@@ -61,7 +63,6 @@ def profile(request):
         'profile_form': profile_form
     }
     return render(request, 'users/profile.html', context)
-
 
 def home(request):
 

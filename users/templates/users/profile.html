@@ -1,11 +1,16 @@
 {% extends "itreporting/base.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
   <h1>Profile Page</h1>
 
   <div class="profile-details">
-    <img src="{{ user.profile.image.url }}" alt="Profile Image" style="width: 150px; height: 150px; border-radius: 50%;" />
+    {% if request.user.profile.photo %}
+      <img src="{{ request.user.profile.photo.url }}" alt="{{ request.user.username }}" class="img-thumbnail">
+    {% else %}
+      <img src="{% static 'profile_pics/default.jpg' %}" alt="Default profile picture" class="img-thumbnail">
+    {% endif %}
 
     <h2>{{ user.first_name }} {{ user.last_name }}</h2>
     <p><strong>Email:</strong> {{ user.email }}</p>
@@ -20,6 +25,7 @@
     {% csrf_token %}
     {{ user_form.as_p }}
     {{ profile_form.as_p }}
-    <button type="submit">Update Profile</button>
+    <button type="submit" class="btn btn-primary">Update</button>
   </form>
 {% endblock %}
+

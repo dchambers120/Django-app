@@ -155,8 +155,9 @@ USE_TZ = True
 
 # STATIC_URL = 'static/'
 
-MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+
 
 # Optional: Enforce subdirectory for profile pictures in your model or forms.
 
