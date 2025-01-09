@@ -13,6 +13,7 @@ from .forms import ContactForm
 from django.contrib.auth.decorators import login_required
 from .models import Module, Course, Registration
 from django.contrib import messages
+from django.http import JsonResponse
 
 def home(request):
     url = 'https://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid={}'
@@ -68,38 +69,37 @@ def report(request):
     daily_report = {'issues': Issue.objects.all(), 'title': 'Issues Reported'}
     return render(request, 'itreporting/report.html', daily_report)
 
-@login_required
+@login_required    
 def module_list(request):
-    # Fetch all modules and the modules that the student is already registered for
     modules = Module.objects.all()
-    registered_modules = Registration.objects.filter(student=request.user).values_list('module', flat=True)
-
+    registered_modules = []
+    if request.user.is_authenticated:
+        registered_modules = Registration.objects.filter(student=request.user).values_list('module_id', flat=True)
     return render(request, 'itreporting/module_list.html', {
         'modules': modules,
-        'registered_modules': registered_modules,  # Registered modules for the current student
+        'registered_modules': registered_modules,
     })
 
 @login_required
 def register_module(request, module_id):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return JsonResponse({'status': 'error', 'message': 'You must be logged in to register for a module.'})
 
     module = get_object_or_404(Module, id=module_id)
 
     # Check if the student is already registered for this module
     if Registration.objects.filter(student=request.user, module=module).exists():
-        messages.error(request, f"You are already registered for the module: {module.name}.")
-        return redirect('itreporting:module_list')  # Adjust as per the page where this is displayed
+        return JsonResponse({'status': 'error', 'message': f"You are already registered for the module: {module.name}."})
 
     # Create a new registration
     Registration.objects.create(student=request.user, module=module)
-    messages.success(request, f"You have successfully registered for the module: {module.name}.")
-    return redirect('itreporting:module_list')
+    return JsonResponse({'status': 'success', 'message': f"You have successfully registered for the module: {module.name}."})
+
     
 @login_required
 def unregister_module(request, module_id):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return JsonResponse({'status': 'error', 'message': 'You must be logged in to unregister from a module.'})
 
     module = get_object_or_404(Module, id=module_id)
 
@@ -107,11 +107,9 @@ def unregister_module(request, module_id):
     registration = Registration.objects.filter(student=request.user, module=module).first()
     if registration:
         registration.delete()
-        messages.success(request, f"You have successfully unregistered from the module: {module.name}.")
+        return JsonResponse({'status': 'success', 'message': f"You have successfully unregistered from the module: {module.name}."})
     else:
-        messages.error(request, f"You are not registered for the module: {module.name}.")
-
-    return redirect('itreporting:module_list')
+        return JsonResponse({'status': 'error', 'message': f"You are not registered for the module: {module.name}."})
 
 @login_required
 def course_list(request):

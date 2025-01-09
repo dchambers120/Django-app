@@ -6,27 +6,56 @@
 <h2>Available Modules:</h2>
 <ul>
     {% for module in modules %}
-        <li>
-            {{ module.name }} - {{ module.description }}
-            {% if module.id in registered_modules %}
-                <button disabled>Already Registered</button>
-                <a href="{% url 'itreporting:unregister_module' module.id %}">Unregister</a>
-            {% else %}
-                <a href="{% url 'itreporting:register_module' module.id %}">Register</a>
-            {% endif %}
-        </li>
+    <div class="module">
+        <h3>{{ module.name }}</h3>
+        <p>{{ module.description }}</p>
+
+        {% if user.is_authenticated %}
+            <button class="register-btn" data-module-id="{{ module.id }}">
+                {% if module.id in registered_modules %}
+                    Unregister
+                {% else %}
+                    Register
+                {% endif %}
+            </button>
+        {% else %}
+            <p>You must be logged in to register.</p>
+        {% endif %}
+    </div>
     {% endfor %}
 </ul>
 
-{% if messages %}
-    <div>
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
+<!-- Error and success message display -->
+<div id="message-container"></div>
+
+<script>
+    // AJAX Registration and Unregistration
+    document.querySelectorAll('.register-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const moduleId = this.getAttribute('data-module-id');
+            const action = this.innerText.toLowerCase(); // Register or Unregister
+
+            fetch(`{% url 'itreporting:register_module' 0 %}`.replace('0', moduleId), {
+                method: action === 'register' ? 'POST' : 'DELETE',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value,
+                },
+                body: action === 'register' ? new FormData() : null,
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageContainer = document.getElementById('message-container');
+                if (data.status === 'success') {
+                    messageContainer.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+                    this.innerText = action === 'register' ? 'Unregister' : 'Register';
+                } else {
+                    messageContainer.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
 
 <section>
     <a href="{% url 'itreporting:home' %}">Home</a>
