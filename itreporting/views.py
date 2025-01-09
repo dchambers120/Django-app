@@ -12,6 +12,7 @@ import requests
 from .forms import ContactForm
 from django.contrib.auth.decorators import login_required
 from .models import Module, Course, Registration
+from django.contrib import messages
 
 def home(request):
     url = 'https://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid={}'
@@ -80,26 +81,37 @@ def module_list(request):
 
 @login_required
 def register_module(request, module_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
     module = get_object_or_404(Module, id=module_id)
 
-    # Ensure the student is not already registered for the module
+    # Check if the student is already registered for this module
     if Registration.objects.filter(student=request.user, module=module).exists():
-        return redirect('itreporting:module_list')  # Redirect if already registered
-    
-    if module.availability:  
-        # Register the student for the module
-        Registration.objects.create(student=request.user, module=module)
+        messages.error(request, f"You are already registered for the module: {module.name}.")
+        return redirect('itreporting:module_list')  # Adjust as per the page where this is displayed
 
+    # Create a new registration
+    Registration.objects.create(student=request.user, module=module)
+    messages.success(request, f"You have successfully registered for the module: {module.name}.")
     return redirect('itreporting:module_list')
     
 @login_required
 def unregister_module(request, module_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
     module = get_object_or_404(Module, id=module_id)
 
-    # Unregister the student by deleting the registration record
-    Registration.objects.filter(student=request.user, module=module).delete()
+    # Check if the student is registered for this module
+    registration = Registration.objects.filter(student=request.user, module=module).first()
+    if registration:
+        registration.delete()
+        messages.success(request, f"You have successfully unregistered from the module: {module.name}.")
+    else:
+        messages.error(request, f"You are not registered for the module: {module.name}.")
 
-    return redirect('itreporting:my_registrations')
+    return redirect('itreporting:module_list')
 
 @login_required
 def course_list(request):
