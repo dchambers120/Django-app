@@ -1,10 +1,20 @@
 {% extends "itreporting/base.html" %}
 
 {% block content %}
+
+<form method="get" action="">
+    <input type="text" name="q" placeholder="Search modules..." value="{{ query }}">
+    <button type="submit">Search</button>
+</form>
+
 <h1>Modules Available for Registration</h1>
 
 <h2>Available Modules:</h2>
 <ul>
+    {% for module in page_obj %}
+        <li>{{ module.name }} - {{ module.description }}</li>
+    {% endfor %}
+
     {% for module in modules %}
     <div class="module">
         <h3>{{ module.name }}</h3>
@@ -24,6 +34,20 @@
     </div>
     {% endfor %}
 </ul>
+
+<div class="pagination">
+    <span>
+        {% if page_obj.has_previous %}
+            <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+
+        {% if page_obj.has_next %}
+            <a href="?q={{ query }}&page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+    </span>
+</div>
 
 <!-- Error and success message display -->
 <div id="message-container"></div>

@@ -14,6 +14,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Module, Course, Registration
 from django.contrib import messages
 from django.http import JsonResponse
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 def home(request):
     url = 'https://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid={}'
@@ -69,16 +71,23 @@ def report(request):
     daily_report = {'issues': Issue.objects.all(), 'title': 'Issues Reported'}
     return render(request, 'itreporting/report.html', daily_report)
 
-@login_required    
+@login_required 
 def module_list(request):
-    modules = Module.objects.all()
+    query = request.GET.get('q')
+    if query:
+        modules = Module.objects.filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        )
+    else:
+        modules = Module.objects.all()
+        
+    paginator = Paginator(modules, 5)  # Show 5 modules per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     registered_modules = []
     if request.user.is_authenticated:
         registered_modules = Registration.objects.filter(student=request.user).values_list('module_id', flat=True)
-    return render(request, 'itreporting/module_list.html', {
-        'modules': modules,
-        'registered_modules': registered_modules,
-    })
+    return render(request, 'itreporting/module_list.html', {'page_obj': page_obj, 'query': query, 'modules': modules, 'registered_modules': registered_modules,})
 
 @login_required
 def register_module(request, module_id):
@@ -113,8 +122,18 @@ def unregister_module(request, module_id):
 
 @login_required
 def course_list(request):
-    courses = Course.objects.all()
-    return render(request, 'itreporting/course_list.html', {'courses': courses})
+    query = request.GET.get('q')  # Get search query from request
+    if query:
+        courses = Course.objects.filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        ).order_by('name')  # Order by name or any relevant field
+    else:
+        courses = Course.objects.all().order_by('name') 
+        
+    paginator = Paginator(courses, 5)  # Show 5 courses per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'itreporting/course_list.html', {'courses': courses, 'page_obj': page_obj, 'query': query})
 
 @login_required
 def course_detail(request, course_id):
