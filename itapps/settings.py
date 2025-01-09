@@ -197,3 +197,15 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'itreporting:home'
 
 LOGIN_URL = 'itreporting:home'
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',  # Required for admin
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Required for admin
+    'django.contrib.messages.middleware.MessageMiddleware',  # Required for admin
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Your custom middleware (if any)
+    'itreporting.middleware.RestrictUnauthorizedAccessMiddleware',  # Example
+]
