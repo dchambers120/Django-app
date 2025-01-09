@@ -69,15 +69,14 @@ def report(request):
 
 @login_required
 def module_list(request):
-    modules = Module.objects.filter(availability=True)  
-    registered_modules = Registration.objects.filter(student=request.user)
+    # Fetch all modules and the modules that the student is already registered for
+    modules = Module.objects.all()
+    registered_modules = Registration.objects.filter(student=request.user).values_list('module', flat=True)
 
-    context = {
+    return render(request, 'itreporting/module_list.html', {
         'modules': modules,
-        'registered_modules': [reg.module for reg in registered_modules]
-    }
-    
-    return render(request, 'itreporting/module_list.html', context)
+        'registered_modules': registered_modules,  # Registered modules for the current student
+    })
 
 @login_required
 def register_module(request, module_id):
@@ -88,6 +87,7 @@ def register_module(request, module_id):
         return redirect('itreporting:module_list')  # Redirect if already registered
     
     if module.availability:  
+        # Register the student for the module
         Registration.objects.create(student=request.user, module=module)
 
     return redirect('itreporting:module_list')
@@ -96,10 +96,10 @@ def register_module(request, module_id):
 def unregister_module(request, module_id):
     module = get_object_or_404(Module, id=module_id)
 
-    # Remove the registration entry for the current student
+    # Unregister the student by deleting the registration record
     Registration.objects.filter(student=request.user, module=module).delete()
 
-    return redirect('itreporting:module_list')
+    return redirect('itreporting:my_registrations')
 
 def course_list(request):
     courses = Course.objects.all()
@@ -108,6 +108,15 @@ def course_list(request):
 def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk)
     return render(request, 'itreporting/course_detail.html', {'object': course})
+
+@login_required
+def my_registrations(request):
+    # Get modules registered by the logged-in user
+    registered_modules = Registration.objects.filter(student=request.user)
+
+    return render(request, 'itreporting/my_registrations.html', {
+        'registered_modules': registered_modules,
+    })
 
 class PostListView(ListView):
     model = Issue

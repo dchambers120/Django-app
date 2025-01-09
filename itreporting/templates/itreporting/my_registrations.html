@@ -1,0 +1,27 @@
+{% extends "itreporting/base.html" %}
+
+{% block content %}
+<h1>My Registered Modules</h1>
+
+{% if registered_modules %}
+    <ul>
+        {% for registration in registered_modules %}
+            <li>
+                {{ registration.module.name }} - {{ registration.module.description }}
+                <a href="{% url 'itreporting:unregister_module' registration.module.id %}">Unregister</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You have not registered for any modules yet.</p>
+{% endif %}
+
+<section>
+    <a href="{% url 'itreporting:home' %}">Home</a>
+    <a href="{% url 'itreporting:about' %}">About</a>
+    <a href="{% url 'itreporting:contact' %}">Contact</a>
+    <a href="{% url 'itreporting:module_list' %}">All Modules</a>
+</section>
+{% endblock %}
+
+

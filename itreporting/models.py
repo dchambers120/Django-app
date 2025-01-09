@@ -36,7 +36,8 @@ class Module(models.Model):
     category = models.CharField(max_length=50)
     description = models.TextField()
     availability = models.BooleanField(default=True)  
-    courses_allowed = models.ManyToManyField(Course)  
+    courses_allowed = models.ManyToManyField(Course) 
+    registered_users = models.ManyToManyField(User, related_name='registered_modules', blank=True) 
 
     def __str__(self):
         return f"{self.name} ({self.code})"
@@ -57,5 +58,4 @@ class Registration(models.Model):
             raise ValidationError(_('A student can only register for one module.'))
 
     def __str__(self):
-        return f"{self.student.username} registered for {self.module.name}"
-    
+        return f"{self.user.username} - {self.module.name}"
